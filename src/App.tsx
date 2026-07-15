@@ -2,7 +2,8 @@ import Header from "./components/Header";
 import TimePanel from "./components/TimePanel";
 import FishPanel from "./components/FishPanel";
 import { useState, useEffect } from "react";
-import { getSeasonName, getWurmTime, type WurmTime } from "./data/clock";
+import { getWurmTime } from "./data/wurmTime";
+import { type WurmTime } from "./data/wurmTimeTypes";
 import { fishTable, type Fish } from "./data/fish";
 
 export default function App() {
@@ -12,21 +13,17 @@ export default function App() {
   useEffect(() => {
     const update = () => {
       const wt = getWurmTime();
-      const nextWurmTime: WurmTime = {
-        ...wt,
-        season: getSeasonName(wt.starfall, wt.week),
-      };
-
-      setWurmTime(nextWurmTime);
+      setWurmTime(wt);
 
       const available = fishTable.filter(
-        (f) => f.times.includes(nextWurmTime.timeOfDay) || f.times.includes("any")
+        (f) => f.times.includes(wt.timeOfDay) || f.times.includes("any")
       );
       setFish(available);
     };
 
     update();
-    const interval = setInterval(update, 1000);
+    // Update every 5 seconds
+    const interval = setInterval(update, 5000);
     return () => clearInterval(interval);
   }, []);
 

@@ -1,4 +1,4 @@
-import type { WurmTime } from "../data/clock";
+import type { WurmTime, } from "../data/wurmTimeTypes";
 
 type TimePanelProps = {
   wurmTime: WurmTime | undefined;

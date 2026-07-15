@@ -16,7 +16,7 @@ The project is visually styled with **wood textures**, **parchment panels**, **i
   - Week  
   - Day  
   - Wurm time (HH:MM:SS)  
-- Automatic updates every second
+- Automatic updates every 125ms for smooth Wurm-second ticking
 
 ### 🌤 Seasonal Detection
 - Maps starfalls to seasons (Winter, Spring, Summer, Autumn)
@@ -46,20 +46,4 @@ npm install
 npm start
 npm run build
 ```
-
----
-
-🧮 Wurm Time Logic
-Wurm Online uses an accelerated calendar:
-
-| Wurm Unit | Real Time |
-| --- | --- |
-| 1 Wurm second | 0.125 s |
-| 1 Wurm minute | 7.5 s |
-| 1 Wurm hour | 7.5 min |
-| 1 Wurm day | 3 hours |
-| 1 Wurm week | 21 hours |
-| 1 starfall | 3.5 days |
-| 1 Wurm year | 42 days |
-
 
