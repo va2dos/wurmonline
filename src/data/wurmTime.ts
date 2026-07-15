@@ -1,7 +1,7 @@
 import type { WurmTime } from "./wurmTimeTypes";
 
 import {
-  starfallNames,
+  starfalls,
   dayNames,
   getSeasonName,
   getTimeOfDay
@@ -21,6 +21,7 @@ export function getWurmTime(now: Date = new Date()): WurmTime {
   const elapsedRealMs = now.getTime() - getWurmEpochOffsetMs();
   const elapsedWurmMs = toWurmMilliseconds(elapsedRealMs);
   const base = unpackWurmMilliseconds(elapsedWurmMs);
+  const starfallData = starfalls[base.starfall - 1];
 
   return {
     wurmYear: base.wurmYear,
@@ -30,7 +31,8 @@ export function getWurmTime(now: Date = new Date()): WurmTime {
     wurmHours: base.wurmHours,
     wurmMinutes: base.wurmMinutes,
     wurmSeconds: base.wurmSeconds,
-    starfallName: starfallNames[base.starfall - 1],
+    starfallName: starfallData.name,
+    starfallColor: starfallData.color,
     dayName: dayNames[base.day - 1],
     season: getSeasonName(base.starfall, base.week),
     timeOfDay: getTimeOfDay(base.wurmHours, base.wurmMinutes)

@@ -1,6 +1,7 @@
-import type { WurmTime, } from "../data/wurmTimeTypes";
+import type { WurmTime, } from "../../data/wurmTimeTypes";
+import SeasonBar from "./SeasonBar";
 
-type TimePanelProps = {
+export type TimePanelProps = {
   wurmTime: WurmTime | undefined;
 };
 
@@ -13,8 +14,10 @@ export default function TimePanel({ wurmTime }: TimePanelProps) {
 
   return (
     <div className="time-panel">
-      <h2 style={{ display: "inline-block" }}>Wurm Time: {String(wurmTime.wurmHours).padStart(2, "0")}:{String(wurmTime.wurmMinutes).padStart(2, "0")}:{String(wurmTime.wurmSeconds).padStart(2, "0")}</h2>
-      <span style={{ display: "inline-block", fontSize: "1.3rem", marginLeft: "0.5rem" }}>
+      <SeasonBar wurmTime={wurmTime} />
+
+      <span style={{ display: "inline-block", fontSize: "1.2rem", marginLeft: "0.5rem", marginTop: "0.5rem" }}>
+        Wurm Time: {String(wurmTime.wurmHours).padStart(2, "0")}:{String(wurmTime.wurmMinutes).padStart(2, "0")}:{String(wurmTime.wurmSeconds).padStart(2, "0")}&nbsp;
         <span style={{ display: "inline-block", marginRight: "0.5rem" }}>
           <b>{timeOfDayLabel}</b>
         </span>
@@ -23,10 +26,11 @@ export default function TimePanel({ wurmTime }: TimePanelProps) {
         of the <b>{wurmTime.starfallName}</b>'s starfall&nbsp;
         in the year of <b>{wurmTime.wurmYear}</b>. 
       </span>
-      <p>
-        Currentlty in the <b>{wurmTime.timeOfDay}</b>.
+      <br/>
+      <span>
+        Currently in the <b>{wurmTime.timeOfDay}</b>.
         Expected season: <b>{wurmTime.season}</b>
-      </p>
+      </span>
     </div>
   );
 }

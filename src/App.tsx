@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import TimePanel from "./components/TimePanel";
+import TimePanel from "./components/TimePanel/TimePanel";
 import FishPanel from "./components/FishPanel";
 import { useState, useEffect } from "react";
 import { getWurmTime } from "./data/wurmTime";
