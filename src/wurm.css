@@ -58,6 +58,137 @@ body {
   font-family: 'IM Fell English', serif;
 }
 
+.wurm-week-time-grid {
+  width: 100%;
+  position: relative;
+}
+
+.wurm-week-needle-anchor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+.wurm-week-needle-hitbox {
+  position: absolute;
+  top: -8px;
+  bottom: -4px;
+  left: -8px;
+  width: 16px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.wurm-week-needle-hitbox:focus-visible {
+  outline: 2px solid #7b4d3f;
+  outline-offset: 2px;
+}
+
+.tooltip-container {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  transform: translateX(-50%);
+  width: min(680px, 92vw);
+  background: rgba(243, 231, 193, 0.98);
+  border: 2px solid #3a3a3a;
+  box-shadow: 0 6px 12px rgba(43, 31, 20, 0.25);
+  padding: 0.6rem 0.75rem;
+  font-family: 'IM Fell English', serif;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.tooltip-container::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(243, 231, 193, 0.98);
+}
+
+.wurm-week-needle-anchor:hover .tooltip-container,
+.wurm-week-needle-anchor:focus-within .tooltip-container {
+  opacity: 1;
+  visibility: visible;
+}
+
+.wurm-week-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border: 2px solid #3a3a3a;
+  background: rgba(255, 250, 230, 0.75);
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.wurm-week-day {
+  text-align: center;
+  padding: 0.35rem 0.25rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  border-right: 1px solid #3a3a3a;
+}
+
+.wurm-week-day:last-child {
+  border-right: 0;
+}
+
+.wurm-week-hours-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border: 2px solid #3a3a3a;
+  border-top: 0;
+  background: rgba(255, 250, 230, 0.65);
+  overflow: hidden;
+  margin-top: -0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.wurm-week-hours-day {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  min-height: 0.65rem;
+  border-right: 1px solid #3a3a3a;
+}
+
+.wurm-week-hours-day:last-child {
+  border-right: 0;
+}
+
+.wurm-day-hour-segment {
+  display: block;
+  min-height: 100%;
+}
+
+.wurm-day-hour-segment.is-night {
+  background: #2f3f59;
+}
+
+.wurm-day-hour-segment.is-morning {
+  background: #d7b66f;
+}
+
+.wurm-day-hour-segment.is-afternoon {
+  background: #b88642;
+}
+
+.wurm-day-hour-segment.is-evening {
+  background: #7b4d3f;
+}
+
 .fish-panel h2 {
   margin-bottom: 1rem;
   text-align: center;

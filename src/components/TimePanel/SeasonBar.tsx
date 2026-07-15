@@ -1,6 +1,13 @@
 import type { TimePanelProps } from "./TimePanel";
 import { getSeasonName, starfalls } from "../../data/wurmTimeTypes";
+import NeedleOverlay from "./NeedleOverlay";
+import RealDateRow from "./SeasonBarParts/RealDateRow";
+import SeasonRow from "./SeasonBarParts/SeasonRow";
+import StarfallRow from "./SeasonBarParts/StarfallRow";
+import WeekRow from "./SeasonBarParts/WeekRow";
 
+const TOTAL_WURM_WEEKS = 48;
+const WEEKS_PER_STARFALL = 4;
 const seasonColors = {
   Winter: "#B0C9C9",
   Spring: "#CAD479",
@@ -9,6 +16,13 @@ const seasonColors = {
 } as const;
 
 type SeasonName = keyof typeof seasonColors;
+type RealDateLabel = {
+  key: string;
+  day: number;
+  tooltip: string;
+};
+
+const REAL_MS_PER_WURM_WEEK = (7 * 24 * 60 * 60 * 1000) / 8;
 
 const seasonSegments = [
   { name: "Winter", weeks: 2, color: seasonColors.Winter },
@@ -17,6 +31,53 @@ const seasonSegments = [
   { name: "Autumn", weeks: 10, color: seasonColors.Autumn },
   { name: "Winter", weeks: 3, color: seasonColors.Winter }
 ];
+
+const gridStyle = {
+  display: "grid",
+  gridTemplateColumns: `repeat(${TOTAL_WURM_WEEKS}, minmax(0, 1fr))`,
+  width: "100%"
+} as const;
+
+function getNeedleLeft(wurmTime: NonNullable<TimePanelProps["wurmTime"]>): string {
+  const secondsIntoDay = (wurmTime.wurmHours * 60 + wurmTime.wurmMinutes) * 60 + wurmTime.wurmSeconds;
+  const dayProgress = ((wurmTime.day - 1) + secondsIntoDay / 86400) / 7;
+  const weekProgress = (wurmTime.starfall - 1) * WEEKS_PER_STARFALL + (wurmTime.week - 1) + dayProgress;
+  return `${(weekProgress / TOTAL_WURM_WEEKS) * 100}%`;
+}
+
+function getCurrentWurmYearStart(wurmTime: NonNullable<TimePanelProps["wurmTime"]>): Date {
+  const secondsIntoDay = (wurmTime.wurmHours * 60 + wurmTime.wurmMinutes) * 60 + wurmTime.wurmSeconds;
+  const dayProgress = ((wurmTime.day - 1) + secondsIntoDay / 86400) / 7;
+  const weekProgress = (wurmTime.starfall - 1) * WEEKS_PER_STARFALL + (wurmTime.week - 1) + dayProgress;
+  const now = new Date();
+  return new Date(now.getTime() - weekProgress * REAL_MS_PER_WURM_WEEK);
+}
+
+function buildWeekLabels() {
+  return starfalls.flatMap((starfall) =>
+    [1, 2, 3, 4].map((week) => ({
+      key: `${starfall.name}-week-${week}`,
+      label: `W${week}`
+    }))
+  );
+}
+
+function buildRealDateLabels(currentWurmYearStart: Date): RealDateLabel[] {
+  return Array.from({ length: TOTAL_WURM_WEEKS }, (_, weekIndex) => {
+    const date = new Date(currentWurmYearStart.getTime() + weekIndex * REAL_MS_PER_WURM_WEEK);
+    const tooltip = "Local Date: " + date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+
+    return {
+      key: `real-date-${weekIndex + 1}`,
+      day: date.getDate(),
+      tooltip
+    };
+  });
+}
 
 function getStarfallBackground(starfall: number): string {
   const weekSeasons = [1, 2, 3, 4].map((week) => getSeasonName(starfall, week) as SeasonName);
@@ -52,104 +113,20 @@ export default function SeasonBar({ wurmTime }: TimePanelProps) {
     return null;
   }
 
-  const secondsIntoDay = (wurmTime.wurmHours * 60 + wurmTime.wurmMinutes) * 60 + wurmTime.wurmSeconds;
-  const dayProgress = ((wurmTime.day - 1) + secondsIntoDay / 86400) / 7;
-  const weekProgress = (wurmTime.starfall - 1) * 4 + (wurmTime.week - 1) + dayProgress;
-  const needleLeft = `${(weekProgress / 48) * 100}%`;
-
-  const weekLabels = starfalls.flatMap((starfall) =>
-    [1, 2, 3, 4].map((week) => ({
-      key: `${starfall.name}-week-${week}`,
-      label: `W${week}`
-    }))
-  );
+  const needleLeft = getNeedleLeft(wurmTime);
+  const currentWurmYearStart = getCurrentWurmYearStart(wurmTime);
+  const weekLabels = buildWeekLabels();
+  const realDateLabels = buildRealDateLabels(currentWurmYearStart);
 
   return (
-    <div style={{ width: "100%", position: "relative" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(48, minmax(0, 1fr))", width: "100%" }}>
-        {seasonSegments.map((season, index) => (
-          <div
-            key={`${season.name}-${index}`}
-            style={{
-              gridColumn: `span ${season.weeks}`,
-              textAlign: "center",
-              backgroundColor: season.color,
-              color: "black",
-              fontWeight: "bold",
-              padding: "0.35rem 0.25rem",
-              border: "1px solid #3a3a3a",
-              boxSizing: "border-box"
-            }}
-          >
-            {season.name}
-          </div>
-        ))}
-        {starfalls.map((starfall, index) => (
-          <div
-            key={starfall.name}
-            style={{
-              gridColumn: "span 4",
-              textAlign: "center",
-              background: getStarfallBackground(index + 1),
-              color: "#2b1f14",
-              fontWeight: "bold",
-              padding: "0.35rem 0.25rem",
-              border: "1px solid #3a3a3a",
-              borderTop: "none",
-              boxSizing: "border-box"
-            }}
-          >
-            {starfall.name}
-          </div>
-        ))}
-        {weekLabels.map((weekData, index) => (
-          <div
-            key={weekData.key}
-            style={{
-              borderTop: "none",
-              borderRight: "1px solid #3a3a3a",
-              borderBottom: "1px solid #3a3a3a",
-              borderLeft: index === 0 ? "1px solid #3a3a3a" : "none",
-              textAlign: "center",
-              fontSize: "0.8rem",
-              padding: "0.2rem 0",
-              boxSizing: "border-box"
-            }}
-          >
-            {weekData.label}
-          </div>
-        ))}
+    <div style={{ width: "100%", position: "relative", cursor: "default" }}>
+      <div style={gridStyle}>
+        <SeasonRow seasonSegments={seasonSegments} />
+        <StarfallRow getStarfallBackground={getStarfallBackground} />
+        <WeekRow weekLabels={weekLabels} />
+        <RealDateRow realDateLabels={realDateLabels} />
       </div>
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: needleLeft,
-          width: "2px",
-          backgroundColor: "#A1432A",
-          transform: "translateX(-50%)",
-          pointerEvents: "none",
-          zIndex: 2,
-          boxShadow: "0 0 0 1px #f2e0a8"
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "-6px",
-          left: needleLeft,
-          width: "0",
-          height: "0",
-          borderLeft: "6px solid transparent",
-          borderRight: "6px solid transparent",
-          borderTop: "none",
-          borderBottom: "8px solid #A1432A",
-          transform: "translateX(-50%)",
-          pointerEvents: "none",
-          zIndex: 3
-        }}
-      />
+      <NeedleOverlay needleLeft={needleLeft} wurmTime={wurmTime} />
     </div>
   );
 }

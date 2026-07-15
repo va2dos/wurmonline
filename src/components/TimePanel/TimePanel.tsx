@@ -1,5 +1,6 @@
 import type { WurmTime, } from "../../data/wurmTimeTypes";
 import SeasonBar from "./SeasonBar";
+import TimeBar from "./TimeBar";
 
 export type TimePanelProps = {
   wurmTime: WurmTime | undefined;
@@ -10,27 +11,11 @@ export default function TimePanel({ wurmTime }: TimePanelProps) {
     return null;
   }
 
-  const timeOfDayLabel = wurmTime.timeOfDay.charAt(0).toUpperCase() + wurmTime.timeOfDay.slice(1);
-
   return (
     <div className="time-panel">
       <SeasonBar wurmTime={wurmTime} />
 
-      <span style={{ display: "inline-block", fontSize: "1.2rem", marginLeft: "0.5rem", marginTop: "0.5rem" }}>
-        Wurm Time: {String(wurmTime.wurmHours).padStart(2, "0")}:{String(wurmTime.wurmMinutes).padStart(2, "0")}:{String(wurmTime.wurmSeconds).padStart(2, "0")}&nbsp;
-        <span style={{ display: "inline-block", marginRight: "0.5rem" }}>
-          <b>{timeOfDayLabel}</b>
-        </span>
-        on the day of <b>{wurmTime.dayName}</b>&nbsp;
-        in week <b>{wurmTime.week}</b>&nbsp;
-        of the <b>{wurmTime.starfallName}</b>'s starfall&nbsp;
-        in the year of <b>{wurmTime.wurmYear}</b>. 
-      </span>
-      <br/>
-      <span>
-        Currently in the <b>{wurmTime.timeOfDay}</b>.
-        Expected season: <b>{wurmTime.season}</b>
-      </span>
+      <TimeBar wurmTime={wurmTime} />
     </div>
   );
 }
