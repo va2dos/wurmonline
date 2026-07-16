@@ -8,6 +8,7 @@ const WURM_SECONDS_PER_DAY = 24 * WURM_SECONDS_PER_HOUR;
 const WURM_DAYS_PER_WEEK = 7;
 const WURM_DAYS_PER_STARFALL = 28;
 const WURM_DAYS_PER_YEAR = 336;
+const WURM_BASE_YEAR = 1;
 
 function euclideanMod(value: number, divisor: number): number {
   return ((value % divisor) + divisor) % divisor;
@@ -22,19 +23,19 @@ export function rdatePack(date: Date): number {
   return Math.floor(date.getTime() / REAL_DAY_MS);
 }
 
-// Wurm → packed (days since year 980)
+// Wurm → packed (days since year 1)
 export function wdatePack(w: WurmTimeBase): number {
   const days =
     (w.starfall - 1) * 28 +
     (w.week - 1) * 7 +
     (w.day - 1);
 
-  return (w.wurmYear - 980) * WURM_DAYS_PER_YEAR + days;
+  return (w.wurmYear - WURM_BASE_YEAR) * WURM_DAYS_PER_YEAR + days;
 }
 
 // Packed → Wurm calendar fields
 export function wdateUnpack(packed: number) {
-  const year = Math.floor(packed / WURM_DAYS_PER_YEAR) + 980;
+  const year = Math.floor(packed / WURM_DAYS_PER_YEAR) + WURM_BASE_YEAR;
   let days = euclideanMod(packed, WURM_DAYS_PER_YEAR);
 
   const starfall = Math.floor(days / WURM_DAYS_PER_STARFALL) + 1;
@@ -50,7 +51,7 @@ export function unpackWurmMilliseconds(totalWurmMs: number): WurmCalendarTime {
   const totalWurmSeconds = Math.floor(totalWurmMs / 1000);
   const totalWurmDays = Math.floor(totalWurmSeconds / WURM_SECONDS_PER_DAY);
 
-  const year = Math.floor(totalWurmDays / WURM_DAYS_PER_YEAR) + 980;
+  const year = Math.floor(totalWurmDays / WURM_DAYS_PER_YEAR) + WURM_BASE_YEAR;
   let dayOfYear = euclideanMod(totalWurmDays, WURM_DAYS_PER_YEAR);
 
   const starfall = Math.floor(dayOfYear / WURM_DAYS_PER_STARFALL) + 1;
