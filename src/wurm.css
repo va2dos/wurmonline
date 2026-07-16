@@ -129,8 +129,7 @@ body {
   grid-template-columns: repeat(7, minmax(0, 1fr));
   border: 2px solid #3a3a3a;
   background: rgba(255, 250, 230, 0.75);
-  overflow: hidden;
-  margin-bottom: 0.75rem;
+  overflow: hidden;  
 }
 
 .wurm-week-day {
@@ -152,41 +151,71 @@ body {
   border: 2px solid #3a3a3a;
   border-top: 0;
   background: rgba(255, 250, 230, 0.65);
-  overflow: hidden;
-  margin-top: -0.75rem;
-  margin-bottom: 0.75rem;
+  overflow: hidden;  
 }
 
 .wurm-week-hours-day {
   display: grid;
   grid-template-columns: repeat(24, minmax(0, 1fr));
-  min-height: 0.65rem;
+  min-height: 1.25rem;
   border-right: 1px solid #3a3a3a;
+  position: relative;
+  overflow: hidden;
 }
 
 .wurm-week-hours-day:last-child {
   border-right: 0;
 }
 
+.wurm-week-hours-day::before,
+.wurm-week-hours-day::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  bottom: -12px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.wurm-week-hours-day::before {
+  left: 9%;
+  background: radial-gradient(circle at 42% 38%, #ffffff 0%, #eef6ff 58%, #c9ddf2 100%);
+  border: 1px solid rgba(124, 154, 186, 0.75);
+  box-shadow: 0 0 6px rgba(218, 234, 255, 0.75);
+}
+
+.wurm-week-hours-day::after {
+  left: 58%;
+  background: radial-gradient(circle at 45% 35%, #fff1b8 0%, #ffe08f 58%, #f2bf63 100%);
+  border: 1px solid rgba(150, 92, 33, 0.55);
+  box-shadow: 0 0 5px rgba(255, 202, 103, 0.5);
+}
+
 .wurm-day-hour-segment {
   display: block;
   min-height: 100%;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .wurm-day-hour-segment.is-night {
-  background: #2f3f59;
+  background: #111a28;
 }
 
 .wurm-day-hour-segment.is-morning {
-  background: #d7b66f;
+  background: #111a28;
 }
 
 .wurm-day-hour-segment.is-afternoon {
-  background: #b88642;
+  background: #8fc5e8;
 }
 
 .wurm-day-hour-segment.is-evening {
-  background: #7b4d3f;
+  background: #8fc5e8;
 }
 
 .fish-panel h2 {
