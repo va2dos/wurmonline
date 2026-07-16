@@ -13,10 +13,6 @@ import {
   unpackWurmMilliseconds
 } from "./wurmTimeMath";
 
-function euclideanMod(value: number, divisor: number): number {
-  return ((value % divisor) + divisor) % divisor;
-}
-
 export function getWurmTime(now: Date = new Date()): WurmTime {
   const elapsedRealMs = now.getTime() - getWurmEpochOffsetMs();
   const elapsedWurmMs = toWurmMilliseconds(elapsedRealMs);

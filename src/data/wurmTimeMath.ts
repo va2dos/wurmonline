@@ -1,7 +1,6 @@
 import type { WurmTimeBase } from "./wurmTimeTypes";
 
 const REAL_DAY_MS = 24 * 60 * 60 * 1000;
-const REAL_MS_PER_WURM_SECOND = 125;
 const WURM_SECONDS_PER_MINUTE = 60;
 const WURM_SECONDS_PER_HOUR = 60 * WURM_SECONDS_PER_MINUTE;
 const WURM_SECONDS_PER_DAY = 24 * WURM_SECONDS_PER_HOUR;
